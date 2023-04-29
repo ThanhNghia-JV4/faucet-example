@@ -2,6 +2,7 @@ import './App.css';
 import web3 from 'web3';
 import React, { useEffect, useState } from 'react';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { loadContract } from './utils/load-contract';
 
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
   const [web3Api, setWeb3Api] = useState({
     provider: null,//khach hang di vao website
     web3: null,
+    contract: null,
   });
 
   const [account, setAccount] = useState(null);
@@ -16,11 +18,13 @@ function App() {
   useEffect(() =>{
     const loadProvider = async () =>{
       const provider = await detectEthereumProvider();
+      const contract = await loadContract('Twister', provider);
       if(provider){
         // provider.request({method: 'eth_requestAccounts'}) // luon luon hien thi ko can yeu cau
         setWeb3Api({
           web3: new web3(provider),
-          provider
+          provider,
+          contract
         })
       } else{
         console.error('please ! INSTALL METAMASK');
